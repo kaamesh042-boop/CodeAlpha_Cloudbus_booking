@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CloudBus Pass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #f4f6fb;
+  --bg2:       #eaecf5;
+  --surface:   #ffffff;
+  --surface2:  #f8f9fd;
+  --border:    #e2e5f0;
+  --border2:   #cbd0e8;
+
+  --indigo:    #4f46e5;
+  --indigo-d:  #3730a3;
+  --indigo-l:  rgba(79,70,229,0.09);
+  --indigo-m:  rgba(79,70,229,0.18);
+
+  --emerald:   #059669;
+  --emerald-l: rgba(5,150,105,0.1);
+
+  --violet:    #7c3aed;
+  --violet-l:  rgba(124,58,237,0.1);
+
+  --rose:      #e11d48;
+  --rose-l:    rgba(225,29,72,0.09);
+
+  --sky:       #0ea5e9;
+  --sky-l:     rgba(14,165,233,0.1);
+
+  --text:      #0f172a;
+  --text2:     #475569;
+  --text3:     #94a3b8;
+
+  --font-head: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+
+  --r:   8px;
+  --rl:  14px;
+  --sh:  0 1px 4px rgba(15,23,42,0.07), 0 4px 16px rgba(15,23,42,0.05);
+  --sh2: 0 2px 8px rgba(15,23,42,0.08), 0 8px 32px rgba(15,23,42,0.08);
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* TOP NAV */
+.topnav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 1px 0 var(--border);
+}
+.topnav-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 60px;
+  display: flex; align-items: center; gap: 0;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  margin-right: 32px;
+  text-decoration: none;
+}
+.brand-icon {
+  width: 36px; height: 36px;
+  background: var(--indigo);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 18px;
+  flex-shrink: 0;
+}
+.brand-name {
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+.nav-tabs {
+  display: flex; gap: 2px;
+  flex: 1;
+}
+.nav-tab {
+  display: flex; align-items: center; gap: 7px;
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  color: var(--text2);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: var(--r);
+  transition: all 0.13s;
+  white-space: nowrap;
+}
+.nav-tab i { font-size: 17px; }
+.nav-tab:hover { background: var(--bg); color: var(--text); }
+.nav-tab.active { background: var(--indigo-l); color: var(--indigo); font-weight: 600; }
+.nav-tab .badge {
+  background: var(--indigo); color: #fff;
+  border-radius: 20px; padding: 1px 6px;
+  font-size: 10px; font-weight: 700;
+  font-family: var(--font-mono);
+}
+.nav-chips {
+  display: flex; gap: 8px; align-items: center; margin-left: auto;
+}
+.nav-chip {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px; color: var(--text2);
+  display: flex; align-items: center; gap: 5px;
+  font-family: var(--font-mono); font-weight: 500;
+}
+.nav-chip b { color: var(--indigo); }
+.live-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--emerald);
+  box-shadow: 0 0 0 2px rgba(5,150,105,0.2);
+  animation: pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.85)} }
+
+/* MAIN WRAPPER */
+.shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 24px 60px;
+}
+
+/* PAGE HEADER */
+.page-header { margin-bottom: 22px; }
+.page-header h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.025em; color: var(--text); }
+.page-header p  { font-size: 13px; color: var(--text2); margin-top: 3px; }
+
+.page { display: none; }
+.page.active { display: block; }
+
+/* STAT CARDS */
+.counter-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.counter-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--rl);
+  padding: 18px 20px;
+  box-shadow: var(--sh);
+  position: relative;
+  overflow: hidden;
+}
+.counter-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: var(--rl) var(--rl) 0 0;
+}
+.counter-card.c-indigo::after  { background: var(--indigo); }
+.counter-card.c-emerald::after { background: var(--emerald); }
+.counter-card.c-violet::after  { background: var(--violet); }
+.counter-card.c-rose::after    { background: var(--rose); }
+.counter-label { font-size: 10.5px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
+.counter-val { font-family: var(--font-mono); font-size: 26px; font-weight: 700; letter-spacing: -0.03em; }
+.counter-val.c-indigo  { color: var(--indigo); }
+.counter-val.c-emerald { color: var(--emerald); }
+.counter-val.c-violet  { color: var(--violet); }
+.counter-val.c-rose    { color: var(--rose); }
+.counter-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+.counter-controls { display: flex; gap: 5px; margin-top: 12px; }
+.cc-btn {
+  flex: 1; padding: 5px;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text2);
+  font-size: 15px; font-family: var(--font-mono);
+  cursor: pointer; transition: all 0.12s; line-height: 1;
+}
+.cc-btn:hover { background: var(--indigo-l); color: var(--indigo); border-color: var(--indigo); }
+
+/* BOOKING LAYOUT */
+.booking-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 18px;
+  align-items: start;
+}
+
+/* CARD */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--rl);
+  box-shadow: var(--sh);
+}
+.card-head {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.card-head h2 {
+  font-size: 14px; font-weight: 700; color: var(--text);
+  display: flex; align-items: center; gap: 7px;
+}
+.card-head h2 i { color: var(--indigo); font-size: 18px; }
+.card-body { padding: 20px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group label { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.07em; }
+.form-group select,
+.form-group input {
+  padding: 9px 12px;
+  border-radius: var(--r);
+  border: 1.5px solid var(--border2);
+  background: var(--surface);
+  font-size: 13px; font-family: var(--font-body); color: var(--text);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  appearance: auto;
+}
+.form-group select:focus,
+.form-group input:focus { border-color: var(--indigo); box-shadow: 0 0 0 3px var(--indigo-l); }
+.form-group select option { background: var(--surface); }
+
+/* SEAT MAP */
+.seat-wrap { margin-top: 18px; }
+.seat-legend { display: flex; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; }
+.leg { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text2); }
+.leg-dot { width: 14px; height: 14px; border-radius: 4px; border: 2px solid; }
+.bus-shell {
+  background: var(--bg);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--rl);
+  padding: 16px;
+}
+.bus-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-bottom: 12px; margin-bottom: 14px;
+  border-bottom: 1px dashed var(--border2);
+  font-size: 12px; color: var(--text2); font-weight: 500;
+}
+.seats-avail { color: var(--emerald); font-family: var(--font-mono); font-weight: 600; }
+.seat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px; max-width: 220px; margin: 0 auto;
+}
+.seat {
+  aspect-ratio: 1; border-radius: 6px; border: 1.5px solid;
+  cursor: pointer; font-size: 9px; font-weight: 700; font-family: var(--font-mono);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.1s; user-select: none;
+}
+.seat.available { border-color: var(--border2); background: var(--surface); color: var(--text2); }
+.seat.available:hover {
+  transform: scale(1.1);
+  border-color: var(--indigo); background: var(--indigo-l); color: var(--indigo);
+  box-shadow: 0 0 0 2px var(--indigo-m);
+}
+.seat.occupied { border-color: var(--border); background: var(--bg2); color: var(--text3); cursor: not-allowed; }
+.seat.selected {
+  border-color: var(--indigo); background: var(--indigo); color: #fff;
+  transform: scale(1.08); box-shadow: 0 2px 10px rgba(79,70,229,0.35);
+}
+.seat-aisle { grid-column: 1 / -1; height: 6px; }
+
+/* PRICE PANEL */
+.price-panel {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--rl); box-shadow: var(--sh); overflow: hidden;
+}
+.price-panel-head {
+  background: linear-gradient(135deg, var(--indigo) 0%, var(--violet) 100%);
+  padding: 16px 20px;
+}
+.price-panel-head h3 { font-size: 14px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 7px; }
+.price-rows { padding: 16px 20px; }
+.price-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--text2); padding: 5px 0; }
+.price-row.total {
+  border-top: 1px solid var(--border); margin-top: 10px; padding-top: 14px;
+  font-weight: 700; font-size: 19px; color: var(--text); font-family: var(--font-mono);
+}
+.price-row.total span:last-child { color: var(--indigo); }
+.selected-seat-info {
+  background: var(--emerald-l);
+  border: 1px solid rgba(5,150,105,0.25);
+  border-radius: var(--r); padding: 10px 16px;
+  font-size: 13px; color: var(--emerald);
+  margin: 0 20px 16px;
+  display: flex; align-items: center; gap: 7px;
+  font-weight: 500;
+}
+.sec-tags { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 20px 16px; }
+.stag {
+  background: var(--bg); border: 1px solid var(--border2);
+  border-radius: 20px; padding: 3px 10px;
+  font-size: 10.5px; color: var(--text2);
+  display: flex; align-items: center; gap: 4px; font-weight: 500;
+}
+.stag i { font-size: 12px; color: var(--indigo); }
+.btn-book {
+  width: calc(100% - 40px); margin: 0 20px 20px; padding: 13px;
+  background: var(--indigo); color: #fff; border: none; border-radius: var(--r);
+  font-family: var(--font-head); font-size: 14px; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.15s; box-shadow: 0 4px 16px rgba(79,70,229,0.35); letter-spacing: 0.01em;
+}
+.btn-book:hover:not(:disabled) { background: var(--indigo-d); box-shadow: 0 6px 24px rgba(79,70,229,0.45); transform: translateY(-1px); }
+.btn-book:disabled { background: var(--bg2); color: var(--text3); box-shadow: none; cursor: not-allowed; }
+
+.book-alert { padding: 0 20px 6px; }
+.alert { padding: 11px 14px; border-radius: var(--r); font-size: 12.5px; display: flex; align-items: flex-start; gap: 7px; font-weight: 500; }
+.alert-success { background: var(--emerald-l); border: 1px solid rgba(5,150,105,0.25); color: var(--emerald); }
+.alert-info    { background: var(--indigo-l);  border: 1px solid rgba(79,70,229,0.2);  color: var(--indigo); }
+.alert-warn    { background: var(--rose-l);    border: 1px solid rgba(225,29,72,0.2);   color: var(--rose); }
+
+/* TICKETS */
+.tickets-list { display: flex; flex-direction: column; gap: 14px; }
+.ticket-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--rl); overflow: hidden; box-shadow: var(--sh);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.ticket-card:hover { box-shadow: var(--sh2); transform: translateY(-1px); }
+.ticket-stripe { height: 4px; background: linear-gradient(90deg, var(--indigo), var(--violet)); }
+.ticket-main { display: grid; grid-template-columns: 1fr auto; }
+.ticket-left { padding: 18px 20px; }
+.ticket-route {
+  font-size: 18px; font-weight: 800; letter-spacing: -0.025em;
+  margin-bottom: 6px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.ticket-route .arrow { color: var(--indigo); font-size: 14px; }
+.ticket-meta { font-size: 12px; color: var(--text2); display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+.ticket-meta span { display: flex; align-items: center; gap: 5px; }
+.ticket-fields { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.tf label { font-size: 9.5px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; display: block; font-family: var(--font-mono); margin-bottom: 3px; font-weight: 600; }
+.tf span { font-size: 14px; font-weight: 600; }
+.ticket-right {
+  border-left: 1px dashed var(--border2); padding: 18px 20px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  min-width: 120px; background: var(--bg);
+}
+.qr-container {
+  background: #fff; border-radius: 8px; padding: 6px;
+  width: 88px; height: 88px; display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border);
+}
+.qr-container canvas, .qr-container img { width: 76px !important; height: 76px !important; display: block; }
+.status-pill { padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; }
+.pill-valid   { background: var(--emerald-l); color: var(--emerald); border: 1px solid rgba(5,150,105,0.25); }
+.pill-expired { background: var(--rose-l);    color: var(--rose);    border: 1px solid rgba(225,29,72,0.2); }
+.ticket-footer { border-top: 1px dashed var(--border2); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; background: var(--bg); }
+.ticket-id { font-family: var(--font-mono); font-size: 11px; color: var(--text3); font-weight: 500; }
+.btn-verify {
+  padding: 5px 13px; border: 1px solid rgba(79,70,229,0.3);
+  border-radius: 20px; background: var(--indigo-l); color: var(--indigo);
+  font-size: 11px; font-family: var(--font-body); cursor: pointer;
+  transition: all 0.15s; display: flex; align-items: center; gap: 5px; font-weight: 600;
+}
+.btn-verify:hover { background: var(--indigo-m); border-color: var(--indigo); }
+
+/* ROUTES */
+.routes-grid { display: flex; flex-direction: column; gap: 8px; }
+.route-row {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--r); padding: 14px 18px;
+  display: flex; align-items: center; gap: 14px;
+  cursor: pointer; transition: all 0.15s; box-shadow: var(--sh);
+}
+.route-row:hover { border-color: var(--indigo); background: var(--surface2); transform: translateX(3px); }
+.route-num {
+  background: var(--indigo); color: #fff; border-radius: 8px;
+  width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 12px; font-family: var(--font-mono); flex-shrink: 0;
+}
+.route-info h3 { font-size: 14px; font-weight: 600; }
+.route-info p  { font-size: 11.5px; color: var(--text2); margin-top: 2px; }
+.route-price-box { margin-left: auto; text-align: right; }
+.route-price { font-size: 20px; font-weight: 800; color: var(--indigo); font-family: var(--font-mono); }
+.route-sub   { font-size: 10px; color: var(--text3); }
+.seats-warn  { color: #d97706; font-weight: 600; }
+.seats-full  { color: var(--rose); font-weight: 600; }
+
+/* INFRA */
+.metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+.metric-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--rl); padding: 18px 20px;
+  box-shadow: var(--sh); position: relative; overflow: hidden;
+}
+.metric-card::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
+.metric-card.c1::before { background: var(--indigo); }
+.metric-card.c2::before { background: var(--emerald); }
+.metric-card.c3::before { background: var(--violet); }
+.metric-card.c4::before { background: var(--rose); }
+.metric-lbl { font-size: 10.5px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; font-weight: 600; }
+.metric-num { font-size: 28px; font-weight: 700; font-family: var(--font-mono); margin: 6px 0 4px; letter-spacing: -0.02em; }
+.metric-num.indigo  { color: var(--indigo); }
+.metric-num.emerald { color: var(--emerald); }
+.metric-num.violet  { color: var(--violet); }
+.metric-num.rose    { color: var(--rose); }
+.metric-sub { font-size: 11.5px; color: var(--emerald); font-weight: 500; }
+.metric-sub.warn { color: var(--rose); }
+
+.traffic-block { margin-bottom: 0; }
+.traf-header { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--text2); margin-bottom: 8px; font-family: var(--font-mono); font-weight: 500; }
+.traf-bar { height: 10px; background: var(--bg2); border-radius: 5px; overflow: hidden; border: 1px solid var(--border); }
+.traf-fill { height: 100%; border-radius: 5px; transition: width 0.8s ease, background 0.4s; background: var(--emerald); }
+.traf-fill.high     { background: #f59e0b; }
+.traf-fill.critical { background: var(--rose); }
+
+.btn-spike {
+  padding: 7px 16px; border: 1.5px solid rgba(79,70,229,0.3);
+  border-radius: 20px; background: var(--indigo-l); color: var(--indigo);
+  font-size: 12.5px; font-family: var(--font-body); cursor: pointer;
+  transition: all 0.15s; display: flex; align-items: center; gap: 5px; font-weight: 600;
+}
+.btn-spike:hover { background: var(--indigo-m); border-color: var(--indigo); }
+
+.server-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.srv {
+  aspect-ratio: 1; border-radius: var(--r);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  font-size: 9px; font-weight: 600; font-family: var(--font-mono);
+  border: 1.5px solid var(--border); transition: all 0.2s; background: var(--surface);
+}
+.srv i { font-size: 18px; }
+.srv.on  { background: var(--emerald-l); border-color: rgba(5,150,105,0.3);    color: var(--emerald); }
+.srv.hot { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.35); color: #d97706; }
+.srv.off { background: var(--bg2); color: var(--text3); }
+.srv.new { animation: pop 0.4s cubic-bezier(.22,1,.36,1); }
+@keyframes pop { from{opacity:0;transform:scale(0.3)} to{opacity:1;transform:scale(1)} }
+
+.arch-layers { display: flex; flex-direction: column; gap: 8px; }
+.arch-layer {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 15px 18px;
+  display: flex; align-items: flex-start; gap: 13px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.arch-layer:hover { border-color: var(--indigo); box-shadow: 0 2px 12px rgba(79,70,229,0.1); }
+.arch-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; }
+.arch-text h4 { font-size: 13.5px; font-weight: 700; margin-bottom: 2px; }
+.arch-text p  { font-size: 12px; color: var(--text2); margin-bottom: 8px; }
+.pills { display: flex; gap: 5px; flex-wrap: wrap; }
+.pill { background: var(--bg); border: 1px solid var(--border2); border-radius: 20px; padding: 2px 9px; font-size: 10px; color: var(--text2); font-family: var(--font-mono); font-weight: 500; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .topnav-inner { padding: 0 12px; }
+  .nav-tab span:not(.badge) { display: none; }
+  .nav-chips { display: none; }
+  .brand-name { display: none; }
+  .shell { padding: 16px 12px 40px; }
+  .booking-grid { grid-template-columns: 1fr; }
+  .counter-bar { grid-template-columns: repeat(2, 1fr); }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .server-grid { grid-template-columns: repeat(4, 1fr); }
+  .ticket-fields { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="#">
+      <div class="brand-icon"><i class="ti ti-bus"></i></div>
+      <span class="brand-name">CloudBus Pass</span>
+    </a>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showPage('book')" id="nav-book">
+        <i class="ti ti-ticket"></i><span>Book Pass</span>
+      </button>
+      <button class="nav-tab" onclick="showPage('tickets')" id="nav-tickets">
+        <i class="ti ti-id"></i><span>My Tickets</span>
+        <span class="badge" id="ticket-count-badge">2</span>
+      </button>
+      <button class="nav-tab" onclick="showPage('routes')" id="nav-routes">
+        <i class="ti ti-map-2"></i><span>Routes</span>
+      </button>
+      <button class="nav-tab" onclick="showPage('infra')" id="nav-infra">
+        <i class="ti ti-server-2"></i><span>Infrastructure</span>
+      </button>
+    </div>
+    <div class="nav-chips">
+      <div class="nav-chip"><div class="live-dot"></div>99.98% uptime</div>
+      <div class="nav-chip"><i class="ti ti-users" style="font-size:13px;color:var(--indigo);"></i> <b id="topbar-users">1,204</b> online</div>
+      <div class="nav-chip"><i class="ti ti-ticket" style="font-size:13px;color:var(--indigo);"></i> <b id="topbar-tickets">8,341</b> issued</div>
+    </div>
+  </div>
+</nav>
+
+<div class="shell">
+
+  <!-- BOOK PAGE -->
+  <div class="page active" id="page-book">
+    <div class="page-header">
+      <h1>Book a Pass</h1>
+      <p>Select your journey, choose a seat, and get your secure QR-signed ticket instantly.</p>
+    </div>
+
+    <div class="counter-bar">
+      <div class="counter-card c-indigo">
+        <div class="counter-label">Total Issued</div>
+        <div class="counter-val c-indigo" id="cnt-total">8,341</div>
+        <div class="counter-sub">all time</div>
+        <div class="counter-controls">
+          <button class="cc-btn" onclick="adjustCounter('total',-1)">−</button>
+          <button class="cc-btn" onclick="adjustCounter('total',1)">+</button>
+          <button class="cc-btn" onclick="adjustCounter('total',100)" style="font-size:10px;font-family:var(--font-body);font-weight:600;">+100</button>
+        </div>
+      </div>
+      <div class="counter-card c-emerald">
+        <div class="counter-label">Today's Bookings</div>
+        <div class="counter-val c-emerald" id="cnt-today">342</div>
+        <div class="counter-sub">since midnight</div>
+        <div class="counter-controls">
+          <button class="cc-btn" onclick="adjustCounter('today',-1)">−</button>
+          <button class="cc-btn" onclick="adjustCounter('today',1)">+</button>
+          <button class="cc-btn" onclick="adjustCounter('today',10)" style="font-size:10px;font-family:var(--font-body);font-weight:600;">+10</button>
+        </div>
+      </div>
+      <div class="counter-card c-rose">
+        <div class="counter-label">Active Passes</div>
+        <div class="counter-val c-rose" id="cnt-active">1,087</div>
+        <div class="counter-sub">in circulation</div>
+        <div class="counter-controls">
+          <button class="cc-btn" onclick="adjustCounter('active',-1)">−</button>
+          <button class="cc-btn" onclick="adjustCounter('active',1)">+</button>
+          <button class="cc-btn" onclick="adjustCounter('active',50)" style="font-size:10px;font-family:var(--font-body);font-weight:600;">+50</button>
+        </div>
+      </div>
+      <div class="counter-card c-violet">
+        <div class="counter-label">Revenue Today</div>
+        <div class="counter-val c-violet" id="cnt-rev">₹28,450</div>
+        <div class="counter-sub">gross</div>
+        <div class="counter-controls">
+          <button class="cc-btn" onclick="adjustRevenue(-100)">−</button>
+          <button class="cc-btn" onclick="adjustRevenue(100)">+</button>
+          <button class="cc-btn" onclick="adjustRevenue(1000)" style="font-size:10px;font-family:var(--font-body);font-weight:600;">+1k</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="booking-grid">
+      <div class="card">
+        <div class="card-head">
+          <h2><i class="ti ti-route"></i>Journey Details</h2>
+        </div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label>From</label>
+              <select id="from-stop" onchange="updatePrice()">
+                <option value="">— Origin —</option>
+                <option>Chennai Central</option>
+                <option>T. Nagar</option>
+                <option>Tambaram</option>
+                <option>Guindy</option>
+                <option>Velachery</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>To</label>
+              <select id="to-stop" onchange="updatePrice()">
+                <option value="">— Destination —</option>
+                <option>Airport</option>
+                <option>Koyambedu</option>
+                <option>Perambur</option>
+                <option>Anna Nagar</option>
+                <option>Porur</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Travel Date</label>
+              <input type="date" id="travel-date">
+            </div>
+            <div class="form-group">
+              <label>Pass Type</label>
+              <select id="pass-type" onchange="updatePrice()">
+                <option value="single">Single Journey — ₹45</option>
+                <option value="return">Return — ₹80</option>
+                <option value="day">Day Pass — ₹120</option>
+                <option value="monthly">Monthly — ₹1200</option>
+              </select>
+            </div>
+          </div>
+          <div class="seat-wrap">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+              <div class="seat-legend">
+                <div class="leg"><div class="leg-dot" style="background:var(--surface);border-color:var(--border2);"></div><span>Available</span></div>
+                <div class="leg"><div class="leg-dot" style="background:var(--bg2);border-color:var(--border);"></div><span>Occupied</span></div>
+                <div class="leg"><div class="leg-dot" style="background:var(--indigo);border-color:var(--indigo);"></div><span>Selected</span></div>
+              </div>
+              <span id="sel-seat-info" style="font-size:12px;color:var(--indigo);font-family:var(--font-mono);font-weight:600;"></span>
+            </div>
+            <div class="bus-shell">
+              <div class="bus-header">
+                <span><i class="ti ti-steering-wheel" style="vertical-align:-2px;margin-right:4px;"></i>Driver</span>
+                <span class="seats-avail" id="seats-left-lbl">28 available</span>
+              </div>
+              <div class="seat-grid" id="seat-grid"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="price-panel">
+          <div class="price-panel-head">
+            <h3><i class="ti ti-receipt"></i>Fare Summary</h3>
+          </div>
+          <div class="price-rows" id="price-rows" style="display:none;">
+            <div class="price-row"><span>Base fare</span><span id="base-fare">₹0</span></div>
+            <div class="price-row"><span>Convenience fee</span><span>₹10</span></div>
+            <div class="price-row"><span>GST (5%)</span><span id="gst-amt">₹0</span></div>
+            <div class="price-row total"><span>Total</span><span id="total-amt">₹0</span></div>
+          </div>
+          <div class="price-rows" id="price-placeholder">
+            <p style="color:var(--text3);font-size:12.5px;text-align:center;padding:12px 0;">Select origin, destination &amp; seat to see fare</p>
+          </div>
+          <div class="selected-seat-info" id="seat-info-box" style="display:none;">
+            <i class="ti ti-armchair"></i>
+            <span id="seat-info-text">Seat selected</span>
+          </div>
+          <div class="sec-tags">
+            <div class="stag"><i class="ti ti-lock"></i>Encrypted</div>
+            <div class="stag"><i class="ti ti-shield-check"></i>HMAC-QR</div>
+            <div class="stag"><i class="ti ti-cloud-check"></i>Cloud-backed</div>
+            <div class="stag"><i class="ti ti-circle-check"></i>ACID locks</div>
+          </div>
+          <div class="book-alert" id="book-alert"></div>
+          <button class="btn-book" id="book-btn" onclick="bookTicket()" disabled>
+            <i class="ti ti-ticket"></i> Book Securely
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TICKETS PAGE -->
+  <div class="page" id="page-tickets">
+    <div class="page-header">
+      <h1>My Tickets</h1>
+      <p>Each ticket carries a unique HMAC-signed QR code. Click Verify to validate authenticity.</p>
+    </div>
+    <div class="alert alert-info" style="margin-bottom:18px;">
+      <i class="ti ti-info-circle"></i>
+      <div>Each ticket has a unique, cryptographically signed QR code (HMAC-SHA256). Click <strong>Verify</strong> to validate authenticity server-side.</div>
+    </div>
+    <div class="tickets-list" id="tickets-container"></div>
+  </div>
+
+  <!-- ROUTES PAGE -->
+  <div class="page" id="page-routes">
+    <div class="page-header">
+      <h1>Browse Routes</h1>
+      <p>Fares are dynamically priced and locked at booking. Click any route to start booking.</p>
+    </div>
+    <div class="alert alert-info" style="margin-bottom:18px;">
+      <i class="ti ti-bolt"></i>
+      <div>Fares are dynamically priced and locked at booking. Click any route to start booking.</div>
+    </div>
+    <div class="routes-grid" id="routes-list"></div>
+  </div>
+
+  <!-- INFRA PAGE -->
+  <div class="page" id="page-infra">
+    <div class="page-header">
+      <h1>Infrastructure</h1>
+      <p>Live view of server health, traffic load, and system architecture.</p>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card c1">
+        <div class="metric-lbl">Active Users</div>
+        <div class="metric-num indigo" id="m-users">1,204</div>
+        <div class="metric-sub">↑ 12% today</div>
+      </div>
+      <div class="metric-card c2">
+        <div class="metric-lbl">Tickets Issued</div>
+        <div class="metric-num emerald" id="m-tickets">8,341</div>
+        <div class="metric-sub">↑ 4.2%</div>
+      </div>
+      <div class="metric-card c3">
+        <div class="metric-lbl">Uptime</div>
+        <div class="metric-num violet">99.98%</div>
+        <div class="metric-sub">SLA met</div>
+      </div>
+      <div class="metric-card c4">
+        <div class="metric-lbl">Active Servers</div>
+        <div class="metric-num rose" id="m-servers">6</div>
+        <div class="metric-sub warn">Auto-scaled</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px;">
+      <div class="card-head"><h2><i class="ti ti-activity"></i>Traffic Load</h2></div>
+      <div class="card-body">
+        <div class="traffic-block">
+          <div class="traf-header">
+            <span>Current load</span>
+            <span id="traf-pct" style="color:var(--emerald);font-weight:700;">42%</span>
+          </div>
+          <div class="traf-bar">
+            <div class="traf-fill" id="traf-fill" style="width:42%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px;">
+      <div class="card-head">
+        <h2><i class="ti ti-server"></i>Server Nodes</h2>
+        <button class="btn-spike" onclick="simulateTraffic()">
+          <i class="ti ti-bolt"></i> Simulate Spike
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="server-grid" id="server-grid"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h2><i class="ti ti-topology-star"></i>System Architecture</h2></div>
+      <div class="card-body">
+        <div class="arch-layers">
+          <div class="arch-layer">
+            <div class="arch-icon" style="background:var(--indigo-l);"><i class="ti ti-world" style="color:var(--indigo);"></i></div>
+            <div class="arch-text">
+              <h4>CDN + Load Balancer</h4>
+              <p>Global edge nodes, SSL termination, DDoS protection, geographic routing</p>
+              <div class="pills"><span class="pill">CloudFront</span><span class="pill">WAF</span><span class="pill">Rate limiting</span><span class="pill">TLS 1.3</span></div>
+            </div>
+          </div>
+          <div class="arch-layer">
+            <div class="arch-icon" style="background:var(--emerald-l);"><i class="ti ti-server-2" style="color:var(--emerald);"></i></div>
+            <div class="arch-text">
+              <h4>Auto-Scaling App Servers</h4>
+              <p>Horizontal scaling on CPU/memory triggers, zero-downtime rolling deploys</p>
+              <div class="pills"><span class="pill">Kubernetes</span><span class="pill">HPA</span><span class="pill">Rolling deploy</span><span class="pill">Circuit breaker</span></div>
+            </div>
+          </div>
+          <div class="arch-layer">
+            <div class="arch-icon" style="background:var(--violet-l);"><i class="ti ti-database" style="color:var(--violet);"></i></div>
+            <div class="arch-text">
+              <h4>Distributed Database</h4>
+              <p>Transactional seat locking prevents double-booking, ACID compliance, cross-region replication</p>
+              <div class="pills"><span class="pill">PostgreSQL HA</span><span class="pill">Redis cache</span><span class="pill">Read replicas</span><span class="pill">PITR</span></div>
+            </div>
+          </div>
+          <div class="arch-layer">
+            <div class="arch-icon" style="background:var(--rose-l);"><i class="ti ti-lock" style="color:var(--rose);"></i></div>
+            <div class="arch-text">
+              <h4>Security &amp; Ticket Integrity</h4>
+              <p>Signed JWT tickets, HMAC-SHA256 QR codes, idempotent bookings, full audit trail</p>
+              <div class="pills"><span class="pill">JWT HS256</span><span class="pill">QR HMAC</span><span class="pill">Audit log</span><span class="pill">Idempotency</span></div>
+            </div>
+          </div>
+          <div class="arch-layer">
+            <div class="arch-icon" style="background:var(--sky-l);"><i class="ti ti-chart-line" style="color:var(--sky);"></i></div>
+            <div class="arch-text">
+              <h4>Monitoring &amp; Observability</h4>
+              <p>Real-time alerting, distributed tracing, SLA dashboards, anomaly detection</p>
+              <div class="pills"><span class="pill">Prometheus</span><span class="pill">Grafana</span><span class="pill">OpenTelemetry</span><span class="pill">PagerDuty</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const PRICES = { single: 45, return: 80, day: 120, monthly: 1200 };
+const ROUTES = [
+  { num: '21C', from: 'Chennai Central', to: 'Airport',     duration: '55 min', seats: 12, price: 60 },
+  { num: '47',  from: 'T. Nagar',        to: 'Koyambedu',  duration: '30 min', seats: 6,  price: 25 },
+  { num: '15A', from: 'Guindy',          to: 'Perambur',   duration: '45 min', seats: 18, price: 35 },
+  { num: '5D',  from: 'Velachery',       to: 'Anna Nagar', duration: '40 min', seats: 3,  price: 30 },
+  { num: '23',  from: 'Tambaram',        to: 'Porur',      duration: '60 min', seats: 22, price: 50 },
+  { num: '11B', from: 'Perambur',        to: 'T. Nagar',   duration: '35 min', seats: 0,  price: 20 },
+];
+
+const TODAY = new Date().toISOString().split('T')[0];
+const dateInput = document.getElementById('travel-date');
+dateInput.value = TODAY; dateInput.min = TODAY;
+dateInput.addEventListener('change', validateForm);
+
+let tickets = [
+  { id: 'CB-2024-7841', from: 'T. Nagar', to: 'Koyambedu', date: TODAY, seat: '4B', type: 'Single Journey', price: 80, valid: true },
+  { id: 'CB-2024-6603', from: 'Chennai Central', to: 'Airport', date: '2024-11-28', seat: '2A', type: 'Return', price: 145, valid: false },
+];
+let counters = { total: 8341, today: 342, active: 1087, rev: 28450 };
+
+function adjustCounter(key, delta) { counters[key] = Math.max(0, counters[key] + delta); renderCounters(); syncCounterToMetrics(); }
+function adjustRevenue(delta) { counters.rev = Math.max(0, counters.rev + delta); renderCounters(); }
+function renderCounters() {
+  document.getElementById('cnt-total').textContent  = counters.total.toLocaleString('en-IN');
+  document.getElementById('cnt-today').textContent  = counters.today.toLocaleString('en-IN');
+  document.getElementById('cnt-active').textContent = counters.active.toLocaleString('en-IN');
+  document.getElementById('cnt-rev').textContent    = '₹' + counters.rev.toLocaleString('en-IN');
+  document.getElementById('topbar-tickets').textContent = counters.total.toLocaleString('en-IN');
+  document.getElementById('ticket-count-badge').textContent = tickets.length;
+}
+function syncCounterToMetrics() {
+  const mt = document.getElementById('m-tickets');
+  if (mt) mt.textContent = counters.total.toLocaleString('en-IN');
+}
+
+let selectedSeat = null;
+const OCCUPIED = new Set([2,5,8,11,14,17,20,23,28,31,34,37]);
+
+function initSeats() {
+  const grid = document.getElementById('seat-grid');
+  grid.innerHTML = '';
+  for (let i = 1; i <= 40; i++) {
+    if (i === 21) { const d = document.createElement('div'); d.className = 'seat-aisle'; grid.appendChild(d); }
+    const s = document.createElement('div');
+    const occ = OCCUPIED.has(i), sel = selectedSeat === i;
+    s.className = 'seat ' + (sel ? 'selected' : occ ? 'occupied' : 'available');
+    s.textContent = i;
+    if (!occ) {
+      s.onclick = () => selectSeat(i);
+      s.setAttribute('tabindex', '0');
+      s.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') selectSeat(i); };
+    }
+    grid.appendChild(s);
+  }
+  document.getElementById('seats-left-lbl').textContent = (40 - OCCUPIED.size) + ' available';
+}
+
+function selectSeat(n) {
+  selectedSeat = selectedSeat === n ? null : n;
+  document.getElementById('sel-seat-info').textContent = selectedSeat ? 'Seat ' + selectedSeat + ' ✓' : '';
+  const box = document.getElementById('seat-info-box');
+  if (selectedSeat) {
+    const col = selectedSeat % 4;
+    const label = selectedSeat + ['A','B','C','D'][col === 0 ? 3 : col - 1];
+    document.getElementById('seat-info-text').textContent = 'Seat ' + label + ' selected';
+    box.style.display = 'flex';
+  } else { box.style.display = 'none'; }
+  initSeats(); validateForm();
+}
+
+function updatePrice() {
+  const from = document.getElementById('from-stop').value;
+  const to   = document.getElementById('to-stop').value;
+  const type = document.getElementById('pass-type').value;
+  validateForm();
+  const pr = document.getElementById('price-rows'), ph = document.getElementById('price-placeholder');
+  if (!from || !to) { pr.style.display = 'none'; ph.style.display = 'block'; return; }
+  const base = PRICES[type], gst = Math.round(base * 0.05), total = base + 10 + gst;
+  document.getElementById('base-fare').textContent = '₹' + base;
+  document.getElementById('gst-amt').textContent   = '₹' + gst;
+  document.getElementById('total-amt').textContent = '₹' + total;
+  pr.style.display = 'block'; ph.style.display = 'none';
+}
+
+function validateForm() {
+  const from = document.getElementById('from-stop').value;
+  const to   = document.getElementById('to-stop').value;
+  const date = document.getElementById('travel-date').value;
+  document.getElementById('book-btn').disabled = !(from && to && date && selectedSeat !== null && from !== to);
+}
+
+function bookTicket() {
+  const from = document.getElementById('from-stop').value;
+  const to   = document.getElementById('to-stop').value;
+  const date = document.getElementById('travel-date').value;
+  const type = document.getElementById('pass-type').value;
+  const base = PRICES[type], total = base + 10 + Math.round(base * 0.05);
+  const id   = 'CB-' + new Date().getFullYear() + '-' + (Math.floor(Math.random() * 9000) + 1000);
+  const col  = selectedSeat % 4;
+  const seatLabel = selectedSeat + ['A','B','C','D'][col === 0 ? 3 : col - 1];
+  const typeLabel = { single:'Single Journey', return:'Return', day:'Day Pass', monthly:'Monthly Pass' }[type];
+  OCCUPIED.add(selectedSeat);
+  tickets.unshift({ id, from, to, date, seat: seatLabel, type: typeLabel, price: total, valid: true });
+  selectedSeat = null;
+  counters.total++; counters.today++; counters.active++; counters.rev += total;
+  renderCounters();
+  document.getElementById('seat-info-box').style.display = 'none';
+  document.getElementById('sel-seat-info').textContent = '';
+  document.getElementById('price-rows').style.display = 'none';
+  document.getElementById('price-placeholder').style.display = 'block';
+  document.getElementById('from-stop').value = '';
+  document.getElementById('to-stop').value   = '';
+  document.getElementById('book-btn').disabled = true;
+  initSeats(); validateForm();
+  const al = document.getElementById('book-alert');
+  al.innerHTML = `<div class="alert alert-success"><i class="ti ti-circle-check"></i><div>Booked! <strong>${id}</strong> — cryptographically signed &amp; stored.</div></div>`;
+  setTimeout(() => al.innerHTML = '', 5000);
+}
+
+function generateQR(container, data) {
+  container.innerHTML = '';
+  try {
+    new QRCode(container, { text: data, width: 76, height: 76, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+  } catch(e) {
+    container.innerHTML = '<svg width="76" height="76" viewBox="0 0 10 10" fill="#333"><rect x="1" y="1" width="3" height="3"/><rect x="6" y="1" width="3" height="3"/><rect x="1" y="6" width="3" height="3"/><rect x="5" y="5" width="1" height="1"/><rect x="7" y="5" width="2" height="1"/><rect x="5" y="7" width="1" height="2"/><rect x="7" y="8" width="2" height="1"/></svg>';
+  }
+}
+
+function renderTickets() {
+  const c = document.getElementById('tickets-container');
+  if (!tickets.length) { c.innerHTML = '<p style="color:var(--text3);text-align:center;padding:3rem 0;font-size:14px;"><i class="ti ti-ticket" style="font-size:32px;display:block;margin-bottom:8px;"></i>No tickets yet.</p>'; return; }
+  c.innerHTML = tickets.map((t, idx) => `
+    <div class="ticket-card">
+      <div class="ticket-stripe"></div>
+      <div class="ticket-main">
+        <div class="ticket-left">
+          <div class="ticket-route">
+            ${t.from} <span class="arrow"><i class="ti ti-arrow-right"></i></span> ${t.to}
+            <span class="status-pill ${t.valid ? 'pill-valid' : 'pill-expired'}">${t.valid ? '✓ Valid' : 'Expired'}</span>
+          </div>
+          <div class="ticket-meta">
+            <span><i class="ti ti-calendar"></i>${t.date}</span>
+            <span><i class="ti ti-tag"></i>${t.type}</span>
+          </div>
+          <div class="ticket-fields">
+            <div class="tf"><label>Seat</label><span>${t.seat}</span></div>
+            <div class="tf"><label>Fare</label><span style="color:var(--indigo);">₹${t.price}</span></div>
+            <div class="tf"><label>Status</label><span style="color:${t.valid ? 'var(--emerald)' : 'var(--rose)'};">${t.valid ? 'Active' : 'Expired'}</span></div>
+          </div>
+        </div>
+        <div class="ticket-right">
+          <div class="qr-container" id="qr-${idx}"></div>
+          <span style="font-size:9px;color:var(--text3);font-family:var(--font-mono);font-weight:600;">SCAN TO BOARD</span>
+        </div>
+      </div>
+      <div class="ticket-footer">
+        <span class="ticket-id">${t.id}</span>
+        <button class="btn-verify" onclick="verifyTicket('${t.id}')"><i class="ti ti-shield-check"></i> Verify</button>
+      </div>
+    </div>
+  `).join('');
+  tickets.forEach((t, idx) => {
+    const payload = JSON.stringify({ id: t.id, from: t.from, to: t.to, date: t.date, seat: t.seat, price: t.price, valid: t.valid, hmac: btoa(t.id + ':' + t.date + ':cloudbus-secret').slice(0, 16) });
+    setTimeout(() => { const el = document.getElementById('qr-' + idx); if (el) generateQR(el, payload); }, idx * 50);
+  });
+}
+
+function verifyTicket(id) {
+  const t = tickets.find(x => x.id === id);
+  if (!t) return;
+  const hmac = btoa(t.id + ':' + t.date + ':cloudbus-secret').slice(0, 16);
+  alert('✓ Ticket Verification\n\nID: ' + id + '\nHMAC signature: ' + hmac + '...\nDuplicate check: none found\nCloud ledger: confirmed\n\nStatus: ' + (t.valid ? '✓ VALID — accept passenger' : '✗ EXPIRED — reject'));
+}
+
+function renderRoutes() {
+  document.getElementById('routes-list').innerHTML = ROUTES.map(r => `
+    <div class="route-row" onclick="goBook('${r.from}','${r.to}')">
+      <div class="route-num">${r.num}</div>
+      <div class="route-info">
+        <h3>${r.from} → ${r.to}</h3>
+        <p><i class="ti ti-clock" style="vertical-align:-2px;margin-right:3px;"></i>${r.duration} &nbsp;·&nbsp;
+          ${r.seats === 0 ? '<span class="seats-full">Full</span>' : r.seats <= 5 ? '<span class="seats-warn">' + r.seats + ' seats left</span>' : r.seats + ' seats available'}
+        </p>
+      </div>
+      <div class="route-price-box">
+        <div class="route-price">₹${r.price}</div>
+        <div class="route-sub">${r.seats === 0 ? '—' : 'per journey'}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function goBook(from, to) {
+  showPage('book');
+  document.getElementById('from-stop').value = from;
+  document.getElementById('to-stop').value   = to;
+  updatePrice();
+}
+
+let serverCount = 6, trafficLevel = 42, spiking = false;
+
+function renderServers() {
+  document.getElementById('server-grid').innerHTML = Array.from({ length: 12 }, (_, i) => {
+    const state = i < serverCount ? (trafficLevel > 70 ? 'hot' : 'on') : 'off';
+    return `<div class="srv ${state}"><i class="ti ti-server-2"></i><span>S${String(i+1).padStart(2,'0')}</span></div>`;
+  }).join('');
+}
+
+function simulateTraffic() {
+  if (spiking) return; spiking = true;
+  const prev = serverCount;
+  trafficLevel = Math.min(96, trafficLevel + 38);
+  serverCount  = Math.min(12, serverCount + 3);
+  document.getElementById('m-servers').textContent = serverCount;
+  const fill = document.getElementById('traf-fill');
+  fill.style.width = trafficLevel + '%';
+  fill.className = 'traf-fill' + (trafficLevel > 80 ? ' critical' : ' high');
+  document.getElementById('traf-pct').textContent = trafficLevel + '%';
+  document.getElementById('m-users').textContent = (1204 + Math.floor(trafficLevel * 22)).toLocaleString();
+  renderServers();
+  document.querySelectorAll('.srv').forEach((n, i) => { if (i >= prev) n.classList.add('new'); });
+  setTimeout(() => {
+    trafficLevel = Math.max(42, trafficLevel - 30);
+    fill.style.width = trafficLevel + '%';
+    fill.className = 'traf-fill' + (trafficLevel > 60 ? ' high' : '');
+    document.getElementById('traf-pct').textContent = trafficLevel + '%';
+    document.getElementById('m-users').textContent = (1204 + Math.floor(trafficLevel * 8)).toLocaleString();
+    spiking = false;
+  }, 3500);
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.getElementById('nav-' + id).classList.add('active');
+  if (id === 'tickets') renderTickets();
+  if (id === 'routes')  renderRoutes();
+  if (id === 'infra')   renderServers();
+}
+
+initSeats();
+renderCounters();
+</script>
+</body>
+</html>
